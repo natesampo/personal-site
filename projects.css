@@ -1,0 +1,169 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: "Work Sans", sans-serif;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+h4,
+nav ul a,
+.dropdown-content a {
+	font-size: 0.7rem;
+	font-weight: bold;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+nav ul a:hover {
+	color: lightgray;
+}
+
+a.button {
+	font-size: 0.8rem;
+	background-color: black;
+	color: white;
+	display: inline-block;
+	border-radius: 3px;
+	padding: 8px 30px;
+}
+
+a.button:hover {
+	background-color: silver;
+}
+
+p {
+	font-size: 0.9rem;
+	letter-spacing: 1.5px;
+	line-height: 1.6;
+}
+
+.mobile {
+	display: none;
+}
+
+li {
+	list-style-type: none;
+}
+
+.container {
+	position: relative;
+	margin: 0;
+	padding: 15px 30px 15px;
+	width: 50%;
+	float: left;
+}
+
+nav {
+	padding: 50px 150px;
+	width: 100%;
+}
+
+nav h1 {
+	font-size: 2.35rem;
+	display: inline-block;
+	font-family: "Century Gothic", sans-serif;
+	text-transform: uppercase;
+}
+
+nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #333333;
+}
+
+li {
+	float: right;
+}
+
+li a {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 5px;
+	margin: 25px 30px 0px 30px;
+	text-decoration: none;
+	font-size: 28px;
+}
+
+icon {
+	margin: 0px 8px;
+}
+
+h2 {
+	font-size: 24px;
+	font-weight: normal;
+	margin-left: 3px;
+	letter-spacing: -0.7px;
+	text-transform: uppercase;
+}
+
+h3 {
+	font-size: 20px;
+	text-transform: uppercase;
+}
+
+h4 {
+	color: #A6ACAF;
+	font-size: 13px;
+	margin: 7px 0px -2px 1px;
+	letter-spacing: 1px;
+}
+
+.section,
+.project {
+	margin: 50px 150px;
+}
+
+h2,
+.square,
+.content,
+.project-text {
+	display: inline-block;
+}
+
+.section {
+	padding-bottom: -40px;
+}
+
+.project {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.project-text {
+	width: 50%;
+	padding-left: 5%;
+}
+
+footer {
+	padding: 30px 20px;
+	clear: both;
+	text-align: center;
+}
+
+footer .footer-text {
+	color: dimgray;
+	padding-top: 5px;
+}
+
+.heading {
+	display: inline-block;
+	font-size: 2rem;
+	width: 100%;
+	color: white;
+	background-color: #141414;
+	padding: 15px 30px 15px;
+	border: none;
+	text-align: left;
+}
