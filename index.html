@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Nate Sampo | Projects </title>
-		<link rel="stylesheet" href="projects.css" />
+		<link rel="stylesheet" href="projects.css"/>
 		<link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -30,16 +30,86 @@
 	<body>
 		<ul class="project slam">
 			<li class="content">
-				<img src="slam2.gif" alt="SLAM Example Mapping" width="608" height="418" />
+				<img src="slam2.gif" alt="SLAM Example Mapping" width="608" height="418"/>
 			</li>
 			<li class="project-text">
 				<h3>Simultaneous Localization and Mapping (SLAM)</h3>
 				<br>
+				<p>Technologies: Python, ROS</p>
+				<br>
 				<p>Have you ever wanted to map an unknown space, but are afraid of the mapping agent getting lost? Well fret no longer, for the solution is here! Our SLAM algorithm utilizes a probabilistic occupancy grid to help track both the mapping agent as well as obstacles it encounters. Pictured to the left is an example of our algorithm deployed to a Neato robotic vacuum, represented as a red square, with a (not great) lidar sensor mounted on top.
 				</p>
 				<br>
-				<a href="../files/PlaygroundCounselor-win.zip" class="button">Windows</a>
-				<a href="../files/PlaygroundCounselor-mac.zip" class="button">Mac</a>
+				<a href="https://github.com/ksoltan/comprobo_final/wiki/Blog-Post-%233-(SLAM)" target="_blank" class="button">Read More</a>
+				<a href="https://github.com/ksoltan/comprobo_final" target="_blank" class="button">Source Code</a>
+			</li>
+		</ul>
+
+		<ul class="project streetside">
+			<li class="content">
+				<img src="streetside.png" alt="Grayscale to Color Examples"/>
+			</li>
+			<li class="project-text">
+				<h3>Streetside Colorization</h3>
+				<br>
+				<p>Technologies: Python, PyTorch, Machine Learning</p>
+				<br>
+				<p>During the project, we constructed and trained a convolutional neural network (CNN) to recolor grayscale urban images. Through the use of machine learning, this project successfully returns vibrant color back to boring, monotonous grayscale images.
+				</p>
+				<br>
+				<a href="https://github.com/jeremycryan/streetside-colorization/blob/master/README.md" target="_blank" class="button">Read More</a>
+				<a href="https://github.com/jeremycryan/streetside-colorization" target="_blank" class="button">Source Code</a>
+			</li>
+		</ul>
+
+		<ul class="project tron">
+			<li class="content">
+				<img src="snake.gif" alt="Tron AI Example"/>
+			</li>
+			<li class="project-text">
+				<h3>Tron AI</h3>
+				<br>
+				<p>Technologies: Python, PyTorch, Machine Learning</p>
+				<br>
+				<p>This project uses Neuro-Evolution of Augmenting Topologies (NEAT) to train a convolutional neural network (CNN) to operate as an agent to play the game Tron. In the example on the left, the blue agent has developed a strategy of cutting off the red agent, then filling every other tile available on the board to maximize reward. Because of the implementation of speciation, several strategies are developed in tandem and trained against each other. This AI is fun to play against and challenging to beat!
+				</p>
+				<br>
+				<a href="https://github.com/natesampo/ML-Tron/blob/master/README.md" target="_blank" class="button">Read More</a>
+				<a href="https://github.com/natesampo/ML-Tron" target="_blank" class="button">Source Code</a>
+			</li>
+		</ul>
+
+		<ul class="project renaissance">
+			<li class="content">
+				<img src="renaissance.gif" alt="Painting Repair Example"/>
+			</li>
+			<li class="project-text">
+				<h3>Renaissance Repair</h3>
+				<br>
+				<p>Technologies: Javascript, Node.js, Dropbox API</p>
+				<br>
+				<p>Created for Global Game Jam 2020 with the theme "Repair", this game has the player repairing pieces of damaged priceless artwork. Finished artwork is graded, then uploaded to Dropbox using the Dropbox API. Players can compare their paintings to those of others through a scoreboard that automatically queries Dropbox for additional artwork.
+				</p>
+				<br>
+				<a href="https://renaissance-repair.herokuapp.com/" target="_blank" class="button">Play Game</a>
+				<a href="https://github.com/natesampo/GGJ2020" target="_blank" class="button">Source Code</a>
+			</li>
+		</ul>
+
+		<ul class="project smashed">
+			<li class="content">
+				<img src="smashed.gif" alt="Fighting Game Example"/>
+			</li>
+			<li class="project-text">
+				<h3>Super Smashed Bros</h3>
+				<br>
+				<p>Technologies: Javascript, Node.js</p>
+				<br>
+				<p>Created for Ludum Dare 43, in this game players are pitted against each other in a fight to the death. This platforming fighting game features popular characters from games created as part of Olin College's game jam club. In addition, this game has a fighter creation menu, where users can design and build their own fighters to be added to the game.
+				</p>
+				<br>
+				<a href="http://supersmashed.herokuapp.com/" target="_blank" class="button">Play Game</a>
+				<a href="https://github.com/natesampo/LD43" target="_blank" class="button">Source Code</a>
 			</li>
 		</ul>
 
