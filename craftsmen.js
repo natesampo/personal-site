@@ -25,7 +25,8 @@ function loadFile(file) {
 	return new Promise(function(resolve, reject) {
 		reader.onload = function(event) {resolve(event.target.result);};
 		reader.onerror = function(error) {reject(error);};
-		reader.readAsText(file);
+		document.getElementById('downloadButton').download = 'New ' + file.name;
+		reader.readAsText(file, 'latin3');
 	});
 }
 
@@ -40,6 +41,12 @@ function readFile(content) {
 			grabInfo(content);
 		});
 	});
+}
+
+function removeAllChildren(element) {
+	while (element && element.firstChild) {
+		element.removeChild(element.firstChild);
+	}
 }
 
 function changeView(mode) {
@@ -118,14 +125,26 @@ function properNounDisplay(culture) {
 	return fixedString.substring(1);
 }
 
+function saveToString() {
+	return save.join('\r\n');
+}
+
+function popToString(pop) {
+	return (+pop['size']).toLocaleString() + ' ' + properNounDisplay(pop['culture']) + ' ' + properNounDisplay(pop['type']) + ' in ' + pop['location'];
+}
+
 function grabInfo(content) {
 	let saveEditor = document.getElementById('saveEditor');
 	let tagSelect = document.getElementById('tagSelect');
 	let fromCultureSelect = document.getElementById('fromCultureSelect');
 	let whereSelect = document.getElementById('whereSelect');
+	let toCultureSelect = document.getElementById('toCultureSelect');
 	let primaryCultureText = document.getElementById('primaryCultureText');
 	let acceptedCultureText = document.getElementById('acceptedCultureText');
 	let religionText = document.getElementById('religionText');
+	let downloadButton = document.getElementById('downloadButton');
+	removeAllChildren(tagSelect);
+	removeAllChildren(toCultureSelect);
 	let endTagList = [];
 	let depth = 0;
 	let currCountry = '';
@@ -246,6 +265,7 @@ function grabInfo(content) {
 						&& split[0] != 'movement_issue' && split[0] != 'external_migration' && split[0] != 'local_migration') {
 						trackingPop['culture'] = split[0];
 						trackingPop['religion'] = split[1];
+						trackingPop['line'] = i;
 					}
 				}
 			}
@@ -292,12 +312,26 @@ function grabInfo(content) {
 	}
 
 	if (countries[tagSelect.value]) {
-		primaryCultureText.innerHTML = properNounDisplay(countries[tagSelect.value]['primary_culture']);
+		let properPrimaryCulture = properNounDisplay(countries[tagSelect.value]['primary_culture']);
+		let toCultureOption;
+		if (properPrimaryCulture != 'None') {
+			toCultureOption = document.createElement('option');
+			toCultureOption.innerHTML = properPrimaryCulture;
+			toCultureSelect.appendChild(toCultureOption);
+		}
+
+		primaryCultureText.innerHTML = properPrimaryCulture;
 
 		if (countries[tagSelect.value]['accepted_cultures'].length > 0) {
 			acceptedCultureText.innerHTML = '';
 			for (let i=0; i<countries[tagSelect.value]['accepted_cultures'].length; i++) {
-				acceptedCultureText.innerHTML += ', ' + properNounDisplay(countries[tagSelect.value]['accepted_cultures'][i]);
+				let properAcceptedCulture = properNounDisplay(countries[tagSelect.value]['accepted_cultures'][i]);
+
+				toCultureOption = document.createElement('option');
+				toCultureOption.innerHTML = properAcceptedCulture;
+				toCultureSelect.appendChild(toCultureOption);
+
+				acceptedCultureText.innerHTML += ', ' + properAcceptedCulture;
 			}
 			acceptedCultureText.innerHTML = acceptedCultureText.innerHTML.substring(2);
 		} else {
@@ -312,13 +346,28 @@ function grabInfo(content) {
 	}
 
 	tagSelect.addEventListener('change', function(event) {
+		removeAllChildren(toCultureSelect);
 		if (countries[this.value]) {
-			primaryCultureText.innerHTML = properNounDisplay(countries[this.value]['primary_culture']);
+			let properPrimaryCulture = properNounDisplay(countries[this.value]['primary_culture']);
+			let toCultureOption;
+			if (properPrimaryCulture != 'None') {
+				toCultureOption = document.createElement('option');
+				toCultureOption.innerHTML = properPrimaryCulture;
+				toCultureSelect.appendChild(toCultureOption);
+			}
+
+			primaryCultureText.innerHTML = properPrimaryCulture;
 
 			if (countries[this.value]['accepted_cultures'].length > 0) {
 				acceptedCultureText.innerHTML = '';
 				for (let i=0; i<countries[this.value]['accepted_cultures'].length; i++) {
-					acceptedCultureText.innerHTML += ', ' + properNounDisplay(countries[this.value]['accepted_cultures'][i]);
+					let properAcceptedCulture = properNounDisplay(countries[this.value]['accepted_cultures'][i]);
+
+					toCultureOption = document.createElement('option');
+					toCultureOption.innerHTML = properAcceptedCulture;
+					toCultureSelect.appendChild(toCultureOption);
+
+					acceptedCultureText.innerHTML += ', ' + properAcceptedCulture;
 				}
 				acceptedCultureText.innerHTML = acceptedCultureText.innerHTML.substring(2);
 			} else {
@@ -339,6 +388,10 @@ function grabInfo(content) {
 		calculateEffects();
 	});
 
+	toCultureSelect.addEventListener('change', function(event) {
+		calculateEffects();
+	});
+
 	calculateEffects();
 	changeView(1);
 }
@@ -351,10 +404,89 @@ function addPopForConversion(popsToConvert, pop, provinceAlreadyHit) {
 	popsToConvert.push(pop);
 }
 
+function calculateProvince(prov, convertTo, tag, fromCultureSelectValue) {
+	let provHit = false;
+	if (prov['pops']) {
+		for (let i=0; i<prov['pops'].length; i++) {
+			let pop = prov['pops'][i];
+			if (properNounDisplay(pop['culture']) != convertTo) {
+				let safe = false;
+				switch (fromCultureSelectValue) {
+					case 'Non-accepted':
+						if (pop['culture'] != countries[tag]['primary_culture']) {
+							for (let j=0; j<countries[tag]['accepted_cultures'].length; j++) {
+								if (pop['culture'] == countries[tag]['accepted_cultures'][j]) {
+									safe = true;
+									break;
+								}
+							}
+
+							if (!safe) {
+								addPopForConversion(popsToConvert, pop, provHit);
+								provHit = true;
+							}
+						}
+						break;
+					case 'Non-accepted and accepted not on their cores':
+						let accepted = false;
+						if (pop['culture'] != countries[tag]['primary_culture']) {
+							for (let j=0; j<countries[tag]['accepted_cultures'].length; j++) {
+								if (pop['culture'] == countries[tag]['accepted_cultures'][j]) {
+									accepted = true;
+									break;
+								}
+							}
+						}
+
+						if (pop['culture'] == countries[tag]['primary_culture'] || accepted) {
+							for (let j=0; j<prov['cores'].length; j++) {
+								let tempCountry = countries[prov['cores'][j]];
+								if (tempCountry) {
+									if (tempCountry['primary_culture'] == pop['culture']) {
+										safe = true;
+										break;
+									} else {
+										for (let k=0; k<tempCountry['accepted_cultures'].length; k++) {
+											if (pop['culture'] == tempCountry['accepted_cultures'][k]) {
+												safe = true;
+												break;
+											}
+										}
+									}
+								}
+
+								if (safe) {
+									break;
+								}
+							}
+						}
+
+						if (!safe) {
+							addPopForConversion(popsToConvert, pop, provHit);
+							provHit = true;
+						}
+						break;
+					case 'Non-primary':
+						if (pop['culture'] != countries[tag]['primary_culture']) {
+							addPopForConversion(popsToConvert, pop, provHit);
+							provHit = true;
+						}
+						break;
+					case 'All':
+						addPopForConversion(popsToConvert, pop, provHit);
+						provHit = true;
+						break;
+				}
+			}
+		}
+	}
+}
+
 function calculateEffects() {
 	let tagSelect = document.getElementById('tagSelect');
 	let fromCultureSelect = document.getElementById('fromCultureSelect');
 	let whereSelect = document.getElementById('whereSelect');
+	let toCultureSelect = document.getElementById('toCultureSelect');
 	let popsToConvertText = document.getElementById('popsToConvertText');
 	let provincesToConvertText = document.getElementById('provincesToConvertText');
 	let conversionStats = document.getElementById('conversionStats');
@@ -377,92 +509,53 @@ function calculateEffects() {
 		return;
 	}
 
-	let convertTo = '';
-	if (countries[tagSelect.value]['primary_culture'] == 'none') {
-		if (countries[tagSelect.value]['accepted_cultures'].length > 0) {
-			convertTo = countries[tagSelect.value]['accepted_cultures'][0];
-		}
-	} else {
-		convertTo = countries[tagSelect.value]['primary_culture'];
-	}
-
-	if (convertTo != '') {
+	if (toCultureSelect.value != '') {
 		switch (whereSelect.value) {
 			case 'Owned Provinces':
 				if (provinces['owned'][tagSelect.value]) {
 					for (let i=0; i<provinces['owned'][tagSelect.value].length; i++) {
-						let prov = provinces['owned'][tagSelect.value][i];
-						let provHit = false;
-						if (prov['pops']) {
-							for (let j=0; j<prov['pops'].length; j++) {
-								let pop = prov['pops'][j];
-								if (pop['culture'] != convertTo) {
-									let safe = false;
-									switch (fromCultureSelect.value) {
-										case 'Non-accepted':
-											for (let k=0; k<countries[tagSelect.value]['accepted_cultures'].length; k++) {
-												if (pop['culture'] == countries[tagSelect.value]['accepted_cultures'][k]) {
-													safe = true;
-													break;
-												}
-											}
-
-											if (!safe) {
-												addPopForConversion(popsToConvert, pop, provHit);
-												provHit = true;
-											}
-											break;
-										case 'Non-accepted and accepted not on their cores':
-											for (let k=0; k<countries[tagSelect.value]['accepted_cultures'].length; k++) {
-												if (pop['culture'] == countries[tagSelect.value]['accepted_cultures'][k]) {
-													for (let k=0; k<prov['cores'].length; k++) {
-														let tempCountry = countries[prov['cores'][k]];
-														if (tempCountry) {
-															if (tempCountry['primary_culture'] == pop['culture']) {
-																safe = true;
-																break;
-															} else {
-																for (let l=0; l<tempCountry['accepted_cultures'].length; l++) {
-																	if (tempCountry['accepted_cultures'][l] == pop['culture']) {
-																		safe = true;
-																		break;
-																	}
-																}
-															}
-														}
-
-														if (safe) {
-															break;
-														}
-													}
-												}
-
-												if (safe) {
-													break;
-												}
-											}
-
-											if (!safe) {
-												addPopForConversion(popsToConvert, pop, provHit);
-												provHit = true;
-											}
-											break;
-										case 'All':
-											addPopForConversion(popsToConvert, pop, provHit);
-											provHit = true;
-											break;
-									}
-								}
-							}
-						}
+						calculateProvince(provinces['owned'][tagSelect.value][i], toCultureSelect.value, tagSelect.value, fromCultureSelect.value);
 					}
 				}
 				break;
 			case 'Owned Core Provinces':
+				if (provinces['ownedCores'][tagSelect.value]) {
+					for (let i=0; i<provinces['ownedCores'][tagSelect.value].length; i++) {
+						calculateProvince(provinces['ownedCores'][tagSelect.value][i], toCultureSelect.value, tagSelect.value, fromCultureSelect.value);
+					}
+				}
 				break;
 			case 'All Core Provinces':
+				if (provinces['cores'][tagSelect.value]) {
+					for (let i=0; i<provinces['cores'][tagSelect.value].length; i++) {
+						calculateProvince(provinces['cores'][tagSelect.value][i], toCultureSelect.value, tagSelect.value, fromCultureSelect.value);
+					}
+				}
 				break;
 			case 'All Owned and All Core Provinces':
+				let provsHit = [];
+				if (provinces['owned'][tagSelect.value]) {
+					for (let i=0; i<provinces['owned'][tagSelect.value].length; i++) {
+						provsHit.push(provinces['owned'][tagSelect.value][i]);
+						calculateProvince(provinces['owned'][tagSelect.value][i], toCultureSelect.value, tagSelect.value, fromCultureSelect.value);
+					}
+				}
+
+				if (provinces['cores'][tagSelect.value]) {
+					for (let i=0; i<provinces['cores'][tagSelect.value].length; i++) {
+						let safe = true;
+						for (let j=0; j<provsHit.length; j++) {
+							if (provinces['cores'][tagSelect.value][i] == provsHit[j]) {
+								safe = false;
+								break;
+							}
+						}
+
+						if (safe) {
+							calculateProvince(provinces['cores'][tagSelect.value][i], toCultureSelect.value, tagSelect.value, fromCultureSelect.value);
+						}
+					}
+				}
 				break;
 		}
 	}
@@ -475,19 +568,129 @@ function calculateEffects() {
 		return;
 	}
 
+	let popConversionCheckAll = document.createElement('input');
+	popConversionCheckAll.type = 'checkbox';
+	popConversionCheckAll.id = 'popConversionCheckAll';
+	popConversionCheckAll.name = 'popConversionCheckAll';
+	popConversionCheckAll.checked = true;
+	popConversionCheckAll.onclick = function () {
+		let otherCheckboxes = document.getElementsByClassName('popConversionCheckbox');
+		for (let i=0; i<otherCheckboxes.length; i++) {
+			otherCheckboxes[i].checked = this.checked;
+		}
+	};
+
+	let popConversionCheckAllLabel = document.createElement('label');
+	popConversionCheckAllLabel.htmlFor = 'popConversionCheckAll';
+	popConversionCheckAllLabel.innerHTML = 'Select All';
+	popConversionCheckAllLabel.id = 'popConversionCheckAllLabel';
+	popConversionCheckAllLabel.classList.add('popConversionLabel');
+
+	let popConversionCheckAllDiv = document.createElement('div');
+	popConversionCheckAllDiv.classList.add('popConversion');
+	popConversionCheckAllDiv.appendChild(popConversionCheckAll);
+	popConversionCheckAllDiv.appendChild(popConversionCheckAllLabel);
+
+	conversionStats.appendChild(popConversionCheckAllDiv);
+
 	let totalPopsToConvert = 0;
 	for (let i=0; i<popsToConvert.length; i++) {
 		let pop = popsToConvert[i];
-		let popConversionText = document.createElement('p');
-		popConversionText.innerHTML = (+pop['size']).toLocaleString() + ' ' + properNounDisplay(pop['culture']) + ' ' + properNounDisplay(pop['type']) + ' in ' + pop['location'];
-		popConversionText.classList.add('popConversion');
-		conversionStats.appendChild(popConversionText);
-		totalPopsToConvert += +pop['size']
+		let popStr = popToString(pop);
+
+		let popConversionCheckbox = document.createElement('input');
+		popConversionCheckbox.type = 'checkbox';
+		popConversionCheckbox.id = popStr;
+		popConversionCheckbox.name = popStr;
+		popConversionCheckbox.checked = true;
+		popConversionCheckbox.classList.add('popConversionCheckbox');
+		popConversionCheckbox.onclick = function () {
+			if (!this.checked) {
+				document.getElementById('popConversionCheckAll').checked = false;
+				return;
+			}
+
+			let otherCheckboxes = document.getElementsByClassName('popConversionCheckbox');
+			for (let j=0; j<otherCheckboxes.length; j++) {
+				if (!otherCheckboxes[j].checked) {
+					return;
+				}
+			}
+
+			document.getElementById('popConversionCheckAll').checked = true;
+		};
+
+		let popConversionLabel = document.createElement('label');
+		popConversionLabel.htmlFor = popStr;
+		popConversionLabel.innerHTML = popStr;
+		popConversionLabel.classList.add('popConversionLabel');
+
+		let popConversionDiv = document.createElement('div');
+		popConversionDiv.classList.add('popConversion');
+		popConversionDiv.appendChild(popConversionCheckbox);
+		popConversionDiv.appendChild(popConversionLabel);
+
+		conversionStats.appendChild(popConversionDiv);
+		totalPopsToConvert += +pop['size'];
 	}
 
 	popsToConvertText.innerHTML = totalPopsToConvert.toLocaleString();
 }
 
 function convert() {
+	let tagSelect = document.getElementById('tagSelect');
+	let religionSelect = document.getElementById('religionSelect');
+	let toCultureSelect = document.getElementById('toCultureSelect');
+	let totalPopsConvertedText = document.getElementById('totalPopsConvertedText');
+	let totalProvincesConvertedText = document.getElementById('totalProvincesConvertedText');
+	let downloadButton = document.getElementById('downloadButton');
 
+	if (toCultureSelect.value == '') {
+		return;
+	}
+
+	let numPops = +totalPopsConvertedText.innerHTML.replace(/\,/g, '');
+	let numProvinces = +totalProvincesConvertedText.innerHTML.replace(/\,/g, '');
+
+	let provsHit = [];
+
+	for (let i=popsToConvert.length-1; i>=0; i--) {
+		let pop = popsToConvert.pop();
+
+		let popCheckbox = document.getElementById(popToString(pop));
+		if (popCheckbox && popCheckbox.checked) {
+			let split = save[pop['line']].split('=');
+			save[pop['line']] = toCultureSelect.value + '='
+				+ (religionSelect.value == 'Convert to Country Religion' ? countries[tagSelect.value]['religion'] : split[1]);
+
+			pop['culture'] = toCultureSelect.value.toLowerCase().replace(/ /g, '_');
+			if (religionSelect.value == 'Convert to Country Religion') {
+				pop['religion'] = countries[tagSelect.value]['religion'];
+			}
+
+			numPops += +pop['size'];
+
+			let alreadyHit = false;
+			for (let j=0; j<provsHit.length; j++) {
+				if (pop['location'] == provsHit[j]) {
+					alreadyHit = true;
+					break;
+				}
+			}
+			if (!alreadyHit) {
+				numProvinces++;
+				provsHit.push(pop['location']);
+			}
+		}
+	}
+
+	totalPopsConvertedText.innerHTML = numPops.toLocaleString();
+	totalProvincesConvertedText.innerHTML = numProvinces.toLocaleString();
+
+	if (numPops > 0) {
+		downloadButton.href = 'data:text/plain;charset=latin3,' + encodeURIComponent(saveToString());
+		downloadButton.style['display'] = 'inline-block';
+	}
+
+	calculateEffects();
 }

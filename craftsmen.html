@@ -52,10 +52,15 @@
 				<select name='tagSelect' id='tagSelect'></select>
 				<br>
 				<br>
+				<label for='toCultureSelect'>Convert To:</label>
+				<select name='toCultureSelect' id='toCultureSelect'></select>
+				<br>
+				<br>
 				<label for='fromCultureSelect'>Cultures to Convert:</label>
 				<select name='fromCultureSelect' id='fromCultureSelect'>
 					<option>Non-accepted</option>
 					<option>Non-accepted and accepted not on their cores</option>
+					<option>Non-primary</option>
 					<option>All</option>
 				</select>
 				<br>
@@ -88,6 +93,7 @@
 				<p id='religionText'>Noreligion</p>
 				<br>
 				<a href='javascript:convert();' class='button'>Convert</a>
+				<a href='' id='downloadButton' class='button' download='New Vicky Save'>Download Save</a>
 			</li>
 			<li class='project-text' id='conversionStats'>
 				<h3>Total Pops Converted</h3>
@@ -96,14 +102,13 @@
 				<h3>Total Provinces Converted</h3>
 				<p id='totalProvincesConvertedText'>0</p>
 				<br>
-				<h3>Number of Pops that will be Converted</h3>
+				<h3>Number of Pops to Convert</h3>
 				<p id='popsToConvertText'>0</p>
 				<br>
-				<h3>Number of Provinces that will be Converted</h3>
+				<h3>Number of Provinces to Convert</h3>
 				<p id='provincesToConvertText'>0</p>
 				<br>
-				<h3>Pops that will be Converted:</h3>
-				<br>
+				<h3>Pops to Convert:</h3>
 				<p class='popConversion'>None</p>
 			</li>
 		</ul>

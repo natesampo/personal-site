@@ -27,3 +27,23 @@ p icon {
 #saveEditor {
 	display: none;
 }
+
+#downloadButton {
+	display: none;
+}
+
+.popConversion {
+	font-size: 1.1rem;
+	letter-spacing: 1px;
+	line-height: 1.6;
+	font-family: 'Cambria';
+	display: block;
+}
+
+.popConversionLabel {
+	margin-left: 5px;
+}
+
+#popConversionCheckAllLabel {
+	font-weight: bold;
+}
