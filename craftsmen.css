@@ -1,0 +1,29 @@
+#fileUpload {
+	display: none;
+}
+
+#reading {
+	display: none;
+}
+
+#warn {
+	display: block;
+	justify-content: center;
+	margin-top: 13vh;
+	text-align: center;
+}
+
+p {
+	font-size: 1.1rem;
+	letter-spacing: 1px;
+	line-height: 1.6;
+	font-family: 'Cambria';
+}
+
+p icon {
+	margin: 0px 5px;
+}
+
+#saveEditor {
+	display: none;
+}

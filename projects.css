@@ -5,7 +5,7 @@
 }
 
 body {
-	font-family: "Work Sans", sans-serif;
+	font-family: 'Work Sans', sans-serif;
 }
 
 a {
@@ -69,7 +69,7 @@ nav {
 nav h1 {
 	font-size: 2.35rem;
 	display: inline-block;
-	font-family: "Century Gothic", sans-serif;
+	font-family: 'Century Gothic', sans-serif;
 	text-transform: uppercase;
 }
 

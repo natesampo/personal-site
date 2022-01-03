@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Craftsmen Fix | Victoria 2</title>
+		<link rel='stylesheet' href='projects.css'/>
+		<link rel='stylesheet' href='craftsmen.css'/>
+		<link rel='apple-touch-icon' sizes='152x152' href='apple-touch-icon.png'>
+		<link rel='icon' type='image/png' sizes='32x32' href='favicon-32x32.png'>
+		<link rel='icon' type='image/png' sizes='16x16' href='favicon-16x16.png'>
+		<link rel='manifest' href='site.webmanifest'>
+		<link rel='mask-icon' href='safari-pinned-tab.svg' color='#5bbad5'>
+		<meta name='msapplication-TileColor' content='#da532c'>
+		<meta name='theme-color' content='#ffffff'>
+		<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+		<script src='craftsmen.js'></script>
+		<div class='heading'>
+			<div class='container'>
+				<h1>Craftsmen Culture Fix</h1>
+				<h4>Victoria 2</h4>
+			</div>
+
+			<div class='container'>
+				<ul>
+					<input id='fileUpload' type='file' accept='.v2'/>
+					<li><a href='javascript:upload();'><icon class='fa fa-upload'></icon>Upload Save</a></li>
+				</ul>
+			</div>
+		</div>
+	</head>
+
+	<body>
+		<div id='warn'>
+			<p>Vanilla save games can be found here:</p>
+			<p>C:/Users/YOUR_USERNAME/Documents/Paradox Interactive/Victoria II/save games</p>
+			<br>
+			<br>
+			<p>Modded save games can be found here (replace HPM with your mod of choice):</p>
+			<p>C:/Users/YOUR_USERNAME/Documents/Paradox Interactive/Victoria II/HPM/save games</p>
+			<br>
+			<br>
+			<p>Mac and Linux users will have to find their own save games<icon class='fa fa-meh-o fa-sm'></icon></p>
+		</div>
+
+		<div id='reading'>
+			<p>Reading Uploaded File...</p>
+			<br>
+		</div>
+
+		<ul id='saveEditor'>
+			<li class='content' id='conversionSelections'>
+				<label for='tagSelect'>Select Tag:</label>
+				<select name='tagSelect' id='tagSelect'></select>
+				<br>
+				<br>
+				<label for='fromCultureSelect'>Cultures to Convert:</label>
+				<select name='fromCultureSelect' id='fromCultureSelect'>
+					<option>Non-accepted</option>
+					<option>Non-accepted and accepted not on their cores</option>
+					<option>All</option>
+				</select>
+				<br>
+				<br>
+				<label for='whereSelect'>Where to Convert:</label>
+				<select name='whereSelect' id='whereSelect'>
+					<option>Owned Provinces</option>
+					<option>Owned Core Provinces</option>
+					<option>All Core Provinces</option>
+					<option>All Owned and All Core Provinces</option>
+				</select>
+				<br>
+				<br>
+				<label for='religionSelect'>Religious Conversion:</label>
+				<select name='religionSelect' id='religionSelect'>
+					<option>Convert to Country Religion</option>
+					<option>Don't Change Religion</option>
+				</select>
+				<br>
+				<br>
+				<br>
+				<br>
+				<h3>Primary Culture: </h3>
+				<p id='primaryCultureText'>None</p>
+				<br>
+				<h3>Accepted Cultures: </h3>
+				<p id='acceptedCultureText'>None</p>
+				<br>
+				<h3>Religion: </h3>
+				<p id='religionText'>Noreligion</p>
+				<br>
+				<a href='javascript:convert();' class='button'>Convert</a>
+			</li>
+			<li class='project-text' id='conversionStats'>
+				<h3>Total Pops Converted</h3>
+				<p id='totalPopsConvertedText'>0</p>
+				<br>
+				<h3>Total Provinces Converted</h3>
+				<p id='totalProvincesConvertedText'>0</p>
+				<br>
+				<h3>Number of Pops that will be Converted</h3>
+				<p id='popsToConvertText'>0</p>
+				<br>
+				<h3>Number of Provinces that will be Converted</h3>
+				<p id='provincesToConvertText'>0</p>
+				<br>
+				<h3>Pops that will be Converted:</h3>
+				<br>
+				<p class='popConversion'>None</p>
+			</li>
+		</ul>
+	</body>
+</html>
