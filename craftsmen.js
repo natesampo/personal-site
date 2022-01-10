@@ -26,7 +26,7 @@ function loadFile(file) {
 		reader.onload = function(event) {resolve(event.target.result);};
 		reader.onerror = function(error) {reject(error);};
 		document.getElementById('downloadButton').download = 'New ' + file.name;
-		reader.readAsText(file, 'latin3');
+		reader.readAsText(file, 'ascii');
 	});
 }
 
@@ -123,6 +123,10 @@ function properNounDisplay(culture) {
 	}
 
 	return fixedString.substring(1);
+}
+
+function improperNounDisplay(culture) {
+	return culture.replace(/s/g, '_').toLowerCase();
 }
 
 function saveToString() {
@@ -660,7 +664,7 @@ function convert() {
 		let popCheckbox = document.getElementById(popToString(pop));
 		if (popCheckbox && popCheckbox.checked) {
 			let split = save[pop['line']].split('=');
-			save[pop['line']] = toCultureSelect.value + '='
+			save[pop['line']] = improperNounDisplay(toCultureSelect.value) + '='
 				+ (religionSelect.value == 'Convert to Country Religion' ? countries[tagSelect.value]['religion'] : split[1]);
 
 			pop['culture'] = toCultureSelect.value.toLowerCase().replace(/ /g, '_');
@@ -688,7 +692,7 @@ function convert() {
 	totalProvincesConvertedText.innerHTML = numProvinces.toLocaleString();
 
 	if (numPops > 0) {
-		downloadButton.href = 'data:text/plain;charset=latin3,' + encodeURIComponent(saveToString());
+		downloadButton.href = 'data:text/plain;charset=ascii,' + escape(saveToString());
 		downloadButton.style['display'] = 'inline-block';
 	}
 
