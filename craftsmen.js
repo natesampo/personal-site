@@ -126,7 +126,7 @@ function properNounDisplay(culture) {
 }
 
 function improperNounDisplay(culture) {
-	return culture.replace(/s/g, '_').toLowerCase();
+	return culture.replace(/ /g, '_').toLowerCase();
 }
 
 function saveToString() {
