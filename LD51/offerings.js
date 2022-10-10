@@ -142,7 +142,7 @@ class HealthOffering extends Offering {
 	onClick(level, x, y) {
 		super.onClick(level, x, y);
 
-		level.factions['player'][0].parent.hpTotal += 10;
-		level.factions['player'][0].parent.hp = Math.min(level.factions['player'][0].parent.hp + 20, level.factions['player'][0].parent.hpTotal);
+		level.factions['player'][0].parent.hpTotal += 20;
+		level.factions['player'][0].parent.hp = Math.min(level.factions['player'][0].parent.hp + 40, level.factions['player'][0].parent.hpTotal);
 	}
 }
