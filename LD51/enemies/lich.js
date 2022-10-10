@@ -2,7 +2,7 @@ class LichObject extends MobCompositeObject {
 	constructor(boss, x, y) {
 		// x, y, sprite, angle, animationSpeed, collideable, playable, speed, opacity
 		// name, x, y, width, height, frames, centerX, centerY
-		let rightHand = new ChildObject(x, y, new Sprite('lichrightHand_2_2.png', 0, 0, 2, 2, 1, 0.1875, 0.625), 0, 0, false, false, false, 0, 1, null, []);
+		let rightHand = new ChildObject(x, y, new Sprite('lichrighthand_2_2.png', 0, 0, 2, 2, 1, 0.1875, 0.625), 0, 0, false, false, false, 0, 1, null, []);
 		let staff = new ChildObject(x, y, new Sprite('lichstaff_2_2.png', 0, 0, 2, 2, 1, 0.828125, 0.75), 0, 0, false, false, false, 0, 1, null, []);
 		let skull = new ChildObject(x, y, new Sprite('lichskull_2_2.png', 0, 0, 2, 2, 1, 0.546875, 0.25), 0, 0, false, false, false, 0, 1, null, []);
 		let torso = new ChildObject(x, y, new Sprite('lichtorso_2_2.png', 0, 0, 2, 2, 1, 0.5, 0.5), 0, 0, true, false, true, 0, 1, null, [skull, staff, rightHand]);
