@@ -756,7 +756,7 @@ class PlayerObject extends MobCompositeObject {
 
 		this.attackDamage = 2;
 		this.attackRange = 1;
-		this.attackSpeed = 10;
+		this.attackSpeed = 15;
 		this.cdr = 0;
 		this.spellAmp = 0;
 		this.maxBasicAbilities = 3;
