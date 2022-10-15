@@ -538,7 +538,7 @@ class Weakspot extends Ability {
 		let description = 'Detect an enemy\'s weak spot and deal a crushing blow';
 		let cooldown = 15;
 		let duration = null;
-		let damage = 100;
+		let damage = 150;
 		let spriteName = 'abilityweakspot.png';
 		let ultimate = true;
 		let targeting = 'unit';
