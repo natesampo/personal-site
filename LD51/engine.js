@@ -675,6 +675,7 @@ class Level {
 				this.acceptText.hp = 5;
 				this.acceptText.name = 'Baby Slime';
 				this.uiAlpha = 1;
+				incrementPlayerCounter(this.gameState);
 				break;
 			case 6:
 				this.acceptText.speak('It is well known that indicates you wish to challenge me');
@@ -685,11 +686,15 @@ class Level {
 			case 8:
 				this.acceptText.speak('But before you may face me you must defeat my other minions. Good luck');
 				break;
+			case 9:
+				incrementPlayerCounter(this.gameState);
+				break;
 			case 12:
 				this.addToFaction(this.acceptText.parent.base, 'enemy');
 				this.acceptText.parent.base.boss = true;
 				this.acceptText.parent.actuallyBattle = true;
 				this.runFreezeCounter = true;
+				incrementPlayerCounter(this.gameState);
 				break;
 		}
 
@@ -1184,6 +1189,59 @@ class Game {
 
 	timeSinceStart() {
 		return new Date().getTime() - this.startTime;
+	}
+}
+
+let accessToken = 'sl.BRgpOoNq27Wj4WKsfOIbdVokoEmnVNVLTLk8P5rgwQ724PyJhHDDMDktaq0E3G4dPmgKhFApW88JlOJJyCfAXqCXp5jlkxWLaZDM7O_euEFTSHoN7KscHU7LnlR5rowJwH3U6dk';
+function incrementPlayerCounter(gameState) {
+	try {
+		let downloadRequest = new XMLHttpRequest();
+		downloadRequest.open('GET', 'https://content.dropboxapi.com/2/files/download', true);
+		downloadRequest.setRequestHeader('Content-Type', 'application/octet-stream');
+		downloadRequest.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+		downloadRequest.setRequestHeader('Dropbox-API-Arg', '{\"path\": \"/playercounts.txt\"}');
+		downloadRequest.onreadystatechange = function() {
+			if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+				let gameStateArray = this.responseText.split('\n');
+
+				let found = false;
+				for (var i=0; i<gameStateArray.length; i++) {
+					if (gameStateArray[i].startsWith(gameState + ':')) {
+						gameStateArray[i] = gameState + ':' + (parseInt(gameStateArray[i].split(':')[1]) + 1);
+						found = true;
+						break;
+					}
+				}
+
+				let newPlayerCountString = '';
+				for (var i=0; i<gameStateArray.length; i++) {
+					if (gameStateArray[i].length > 0) {
+						newPlayerCountString += gameStateArray[i] + '\n';
+					}
+				}
+
+				if (found) {
+					newPlayerCountString = newPlayerCountString.slice(0, -1);
+				} else {
+					newPlayerCountString += gameState + ':1';
+				}
+
+				try {
+					let uploadRequest = new XMLHttpRequest();
+					uploadRequest.open('POST', 'https://content.dropboxapi.com/2/files/upload', true);
+					uploadRequest.setRequestHeader('Content-Type', 'application/octet-stream');
+					uploadRequest.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+					uploadRequest.setRequestHeader('Dropbox-API-Arg', '{\"path\": \"/playercounts.txt\",\"mode\": \"overwrite\",\"autorename\": true,\"mute\": false}');
+					uploadRequest.send(newPlayerCountString);
+				} catch (e) {
+					console.log(e);
+				}
+
+			}
+		}
+		downloadRequest.send(null);
+	} catch (e) {
+		console.log(e);
 	}
 }
 
