@@ -1192,8 +1192,7 @@ class Game {
 	}
 }
 
-let accessToken = 'sl.BRiZBRPrtHP-fwyEHwc3rIJrE_pVToUTv_ruPl3n1QMDqAo0vp3f559QGsgSZDhkBnCLWFjbzV9EW6d04Nf5_qgS4kfXX-f2qFimKYRASbki-VlVhGkuPh2D-zuT3s6y4m5-ym';
-accessToken += '4';
+let accessToken = 'sl.BRgpOoNq27Wj4WKsfOIbdVokoEmnVNVLTLk8P5rgwQ724PyJhHDDMDktaq0E3G4dPmgKhFApW88JlOJJyCfAXqCXp5jlkxWLaZDM7O_euEFTSHoN7KscHU7LnlR5rowJwH3U6dk';
 function incrementPlayerCounter(gameState) {
 	try {
 		let downloadRequest = new XMLHttpRequest();
