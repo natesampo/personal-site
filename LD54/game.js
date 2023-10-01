@@ -1307,8 +1307,8 @@ class Game {
 		this.currid = 0;
 		this.backgroundColor = 'rgba(40, 40, 40, 1)';
 
-		this.accessToken1 = 'sl.BnFrUs8i4bD-4ZixiSF9Rgg8aDcwhy1zhSrh9qJLb_UAl9rCsEjGjN1BowDQ';
-		this.accessToken2 = 'j-3ba1hVZ1PrKsc0jkIjji7oZoowluwiVWb-O8THBm1w8MzbGAeiiyhIGVBL7X1v_ryronkmZYRVDIpa';
+		this.accessToken1 = 'sl.BnJAcflmAzYm2pb8z1zewRBmgTAXji-y06dTyWwqEkMjcgQjQO7Hsf2szkZeONAUgX';
+		this.accessToken2 = 'Floo9OCspOoGq8tRyMy2ffIEvPsfpkV34o0Hko-HbbimnmzzXpwvQF77Z7T4yUxZla-YpAm60m';
 
 		this.home = true;
 		this.homeMode = 0;
