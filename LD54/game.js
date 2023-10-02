@@ -3424,7 +3424,8 @@ document.addEventListener('visibilitychange', function () {
 });
 
 function gameLoop(game) {
-	while (game.timeSinceStart() - totalTimeUnloaded >= (1000/game.ticksPerSecond) * game.tickID) {
+	//while (game.timeSinceStart() - totalTimeUnloaded >= (1000/game.ticksPerSecond) * game.tickID) {
+	while (game.timeSinceStart() >= (1000/game.ticksPerSecond) * game.tickID) {
 		game.tick();
 	}
 	game.render();
